@@ -6,9 +6,11 @@ import {
   CalendarDays,
   Check,
   Copy,
+  ExternalLink,
   Heart,
   Home,
   Image as ImageIcon,
+  RefreshCw,
   Share2,
   Star,
   TrendingUp
@@ -23,8 +25,9 @@ import {
   writeFavorites,
   writeReminder
 } from "@/lib/storage";
+import type { TrendItem, TrendSource } from "@/lib/trends";
 
-type Tab = "today" | "history" | "favorites";
+type Tab = "today" | "trends" | "history" | "favorites";
 type ShareTemplate = "editorial" | "signal" | "stoic";
 
 const shareTemplates: Array<{
@@ -155,6 +158,8 @@ export function DailyQuotesApp() {
         />
       )}
 
+      {activeTab === "trends" && <TrendsView onToast={setToast} />}
+
       {activeTab === "favorites" && (
         <FavoritesView
           quotes={favoriteQuotes}
@@ -172,6 +177,12 @@ export function DailyQuotesApp() {
           icon={<Home size={20} />}
           active={activeTab === "today"}
           onClick={() => setActiveTab("today")}
+        />
+        <NavButton
+          label="趋势"
+          icon={<TrendingUp size={20} />}
+          active={activeTab === "trends"}
+          onClick={() => setActiveTab("trends")}
         />
         <NavButton
           label="历史"
@@ -260,7 +271,7 @@ function TodayView({
         <div>
           <p className="strip-title">趋势聚合</p>
           <p className="strip-copy">
-            GitHub Trending / Hacker News 模块已占位，后续接入。
+            GitHub Trending / Hacker News 已接入独立趋势页。
           </p>
         </div>
       </section>
@@ -380,6 +391,162 @@ function FavoritesView({
         </div>
       )}
     </section>
+  );
+}
+
+function TrendsView({ onToast }: { onToast: (message: string) => void }) {
+  const [source, setSource] = useState<TrendSource>("github");
+  const [items, setItems] = useState<TrendItem[]>([]);
+  const [updatedAt, setUpdatedAt] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    void loadTrends(source);
+  }, [source]);
+
+  async function loadTrends(nextSource = source) {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      const endpoint =
+        nextSource === "github"
+          ? "/api/trends/github"
+          : "/api/trends/hacker-news";
+      const response = await fetch(endpoint);
+
+      if (!response.ok) {
+        throw new Error("趋势数据加载失败");
+      }
+
+      const data = (await response.json()) as {
+        updatedAt: string;
+        items: TrendItem[];
+      };
+
+      setItems(data.items);
+      setUpdatedAt(data.updatedAt);
+    } catch {
+      setItems([]);
+      setError("当前无法加载趋势数据。");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function copyTrendInsight(item: TrendItem) {
+    await navigator.clipboard.writeText(
+      `${item.title}\n${item.insight}\n${item.url}`
+    );
+    onToast("已复制趋势洞察");
+  }
+
+  return (
+    <section className="page-stack">
+      <PageTitle
+        eyebrow="Trend radar"
+        title="趋势聚合"
+        copy="从 GitHub 新项目和 Hacker News 热门讨论里提取可观察信号。"
+      />
+
+      <section className="trend-toolbar">
+        <div className="segmented-control" aria-label="趋势来源">
+          <button
+            className={source === "github" ? "active" : ""}
+            type="button"
+            onClick={() => setSource("github")}
+          >
+            GitHub
+          </button>
+          <button
+            className={source === "hacker-news" ? "active" : ""}
+            type="button"
+            onClick={() => setSource("hacker-news")}
+          >
+            HN
+          </button>
+        </div>
+        <button
+          className="mini-button"
+          type="button"
+          onClick={() => loadTrends()}
+          disabled={isLoading}
+        >
+          <RefreshCw size={16} />
+          刷新
+        </button>
+      </section>
+
+      {updatedAt && (
+        <p className="trend-updated">
+          Updated {new Date(updatedAt).toLocaleString("zh-CN")}
+        </p>
+      )}
+
+      {isLoading && (
+        <section className="trend-state">
+          <TrendingUp size={24} />
+          <p>正在加载趋势信号。</p>
+        </section>
+      )}
+
+      {error && (
+        <section className="trend-state">
+          <TrendingUp size={24} />
+          <p>{error}</p>
+          <button className="mini-button" type="button" onClick={() => loadTrends()}>
+            重试
+          </button>
+        </section>
+      )}
+
+      {!isLoading && !error && (
+        <div className="trend-list">
+          {items.map((item) => (
+            <TrendCard
+              key={`${item.source}-${item.id}`}
+              item={item}
+              onCopy={() => copyTrendInsight(item)}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function TrendCard({
+  item,
+  onCopy
+}: {
+  item: TrendItem;
+  onCopy: () => void;
+}) {
+  return (
+    <article className="trend-card">
+      <div className="trend-card-head">
+        <span>{item.source === "github" ? "GitHub" : "Hacker News"}</span>
+        {item.language && <span>{item.language}</span>}
+      </div>
+      <h3>{item.title}</h3>
+      <p className="trend-description">{item.description}</p>
+      <p className="trend-insight">{item.insight}</p>
+      <div className="trend-metrics">
+        <span>{item.score.toLocaleString()} points</span>
+        <span>{item.meta}</span>
+      </div>
+      <div className="trend-actions">
+        <a href={item.url} target="_blank" rel="noreferrer">
+          <ExternalLink size={16} />
+          打开来源
+        </a>
+        <button type="button" onClick={onCopy}>
+          <Copy size={16} />
+          复制洞察
+        </button>
+      </div>
+    </article>
   );
 }
 

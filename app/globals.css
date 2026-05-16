@@ -317,6 +317,150 @@ button {
   gap: 12px;
 }
 
+.trend-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.segmented-control {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex: 1;
+  gap: 4px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 4px;
+}
+
+.segmented-control button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--secondary);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.segmented-control button.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.trend-updated {
+  margin: -8px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 16px;
+}
+
+.trend-state {
+  display: grid;
+  min-height: 180px;
+  place-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--secondary);
+  padding: 24px;
+  text-align: center;
+}
+
+.trend-state p {
+  margin: 0;
+}
+
+.trend-list {
+  display: grid;
+  gap: 12px;
+}
+
+.trend-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.68);
+  padding: 16px;
+}
+
+.trend-card-head,
+.trend-metrics,
+.trend-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.trend-card-head span {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 16px;
+  padding: 4px 8px;
+}
+
+.trend-card h3 {
+  margin: 14px 0 8px;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.trend-description,
+.trend-insight {
+  margin: 0;
+  color: var(--secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.trend-insight {
+  margin-top: 12px;
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+}
+
+.trend-metrics {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 18px;
+}
+
+.trend-actions {
+  margin-top: 14px;
+}
+
+.trend-actions a,
+.trend-actions button {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 18px;
+  padding: 0 10px;
+  text-decoration: none;
+}
+
 .quote-list-item {
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -390,7 +534,7 @@ button {
   bottom: 0;
   left: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   max-width: 680px;
   margin: 0 auto;
   border-top: 1px solid var(--border);
@@ -404,13 +548,13 @@ button {
   min-height: 52px;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   border: 0;
   border-radius: 8px;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 750;
 }
 
