@@ -412,22 +412,53 @@ button {
 
 .trend-card h3 {
   margin: 14px 0 8px;
+  font-family:
+    "PingFang SC",
+    "Microsoft YaHei",
+    "Noto Sans CJK SC",
+    sans-serif;
   font-size: 18px;
   line-height: 1.25;
 }
 
 .trend-description,
-.trend-insight {
+.trend-insight,
+.trend-original {
   margin: 0;
   color: var(--secondary);
   font-size: 14px;
   line-height: 1.6;
 }
 
+.trend-original {
+  color: var(--muted);
+  font-size: 13px;
+}
+
 .trend-insight {
   margin-top: 12px;
   border-left: 3px solid var(--accent);
   padding-left: 12px;
+}
+
+.trend-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.trend-tags span {
+  display: inline-flex;
+  min-height: 22px;
+  align-items: center;
+  border-radius: 6px;
+  background: rgba(31, 111, 91, 0.08);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 16px;
+  padding: 3px 7px;
 }
 
 .trend-metrics {

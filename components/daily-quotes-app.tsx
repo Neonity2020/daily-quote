@@ -437,7 +437,7 @@ function TrendsView({ onToast }: { onToast: (message: string) => void }) {
 
   async function copyTrendInsight(item: TrendItem) {
     await navigator.clipboard.writeText(
-      `${item.title}\n${item.insight}\n${item.url}`
+      `${item.topicZh}\n${item.summaryZh}\n${item.reasonZh}\n\n原始标题：${item.title}\n${item.url}`
     );
     onToast("已复制趋势洞察");
   }
@@ -447,7 +447,7 @@ function TrendsView({ onToast }: { onToast: (message: string) => void }) {
       <PageTitle
         eyebrow="Trend radar"
         title="趋势聚合"
-        copy="从 GitHub 新项目和 Hacker News 热门讨论里提取可观察信号。"
+        copy="用中文摘要快速扫 GitHub 新项目和 Hacker News 热门讨论。"
       />
 
       <section className="trend-toolbar">
@@ -527,11 +527,19 @@ function TrendCard({
     <article className="trend-card">
       <div className="trend-card-head">
         <span>{item.source === "github" ? "GitHub" : "Hacker News"}</span>
-        {item.language && <span>{item.language}</span>}
+        <span>{item.topicZh}</span>
       </div>
-      <h3>{item.title}</h3>
+      <h3>{item.summaryZh}</h3>
+      <p className="trend-original">{item.title}</p>
       <p className="trend-description">{item.description}</p>
-      <p className="trend-insight">{item.insight}</p>
+      <p className="trend-insight">{item.reasonZh}</p>
+      {item.tags.length > 0 && (
+        <div className="trend-tags">
+          {item.tags.map((tag) => (
+            <span key={tag}>{tag}</span>
+          ))}
+        </div>
+      )}
       <div className="trend-metrics">
         <span>{item.score.toLocaleString()} points</span>
         <span>{item.meta}</span>
