@@ -149,9 +149,16 @@ button {
   line-height: 20px;
 }
 
-.quote-source span + span {
+.quote-source span + span,
+.quote-source a {
   color: var(--muted);
   font-weight: 500;
+  text-decoration: none;
+}
+
+.quote-source a:hover,
+.list-source a:hover {
+  color: var(--accent);
 }
 
 .interpretation {
@@ -161,6 +168,44 @@ button {
   font-size: 15px;
   line-height: 1.7;
   padding-left: 14px;
+}
+
+.provenance {
+  margin-top: 18px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  padding: 12px;
+}
+
+.provenance span {
+  display: inline-flex;
+  margin-bottom: 6px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 16px;
+}
+
+.provenance p {
+  margin: 0;
+  color: var(--secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.provenance.compact {
+  margin-top: 12px;
+  padding: 10px;
+}
+
+.provenance.compact span {
+  margin-bottom: 4px;
+}
+
+.provenance.compact p {
+  font-size: 12px;
+  line-height: 1.55;
 }
 
 .tag-row {
@@ -302,6 +347,22 @@ button {
   color: var(--secondary);
   font-size: 13px;
   line-height: 18px;
+}
+
+.list-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.list-source a,
+.list-source span {
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 18px;
+  text-decoration: none;
 }
 
 .list-actions {

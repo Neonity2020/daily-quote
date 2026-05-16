@@ -3,20 +3,17 @@
 import {
   Bell,
   BellOff,
-  BookOpen,
   CalendarDays,
   Check,
   Copy,
   Heart,
   Home,
   Image as ImageIcon,
-  Settings,
   Share2,
-  Sparkles,
   Star,
   TrendingUp
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { categoryLabels, Quote, quotes } from "@/data/quotes";
 import { getQuoteForToday } from "@/lib/date";
 import {
@@ -282,9 +279,16 @@ function QuoteHero({ quote }: { quote: Quote }) {
       <p className="quote-zh">{quote.quoteZh}</p>
       <div className="quote-source">
         <span>{quote.author}</span>
-        {quote.source && <span>{quote.source}</span>}
+        {quote.sourceUrl ? (
+          <a href={quote.sourceUrl} target="_blank" rel="noreferrer">
+            {quote.source}
+          </a>
+        ) : (
+          quote.source && <span>{quote.source}</span>
+        )}
       </div>
       <p className="interpretation">{quote.interpretation}</p>
+      <Provenance quote={quote} />
       <div className="tag-row">
         {quote.tags.map((tag) => (
           <span className="tag" key={tag}>
@@ -400,7 +404,17 @@ function QuoteListItem({
       </div>
       <p className="list-quote-en">{quote.quoteEn}</p>
       <p className="list-quote-zh">{quote.quoteZh}</p>
-      <small>{quote.author}</small>
+      <div className="list-source">
+        <small>{quote.author}</small>
+        {quote.sourceUrl ? (
+          <a href={quote.sourceUrl} target="_blank" rel="noreferrer">
+            来源
+          </a>
+        ) : (
+          <span>原创</span>
+        )}
+      </div>
+      <Provenance quote={quote} compact />
       <div className="list-actions">
         <button type="button" onClick={onFavorite} aria-label="收藏">
           <Heart size={17} fill={isFavorite ? "currentColor" : "none"} />
@@ -413,6 +427,28 @@ function QuoteListItem({
         </button>
       </div>
     </article>
+  );
+}
+
+function Provenance({
+  quote,
+  compact = false
+}: {
+  quote: Quote;
+  compact?: boolean;
+}) {
+  const label =
+    quote.verification === "external-source"
+      ? "外部来源"
+      : quote.verification === "editorial-original"
+        ? "编辑部原创"
+        : "待复核";
+
+  return (
+    <section className={compact ? "provenance compact" : "provenance"}>
+      <span>{label}</span>
+      <p>{quote.provenance}</p>
+    </section>
   );
 }
 
